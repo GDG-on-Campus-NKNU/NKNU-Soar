@@ -1,4 +1,7 @@
 ### PythonVanilla template
+# Generated bindings
+nknu_core/bindings.py
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -6,6 +9,7 @@ __pycache__/
 
 # C extensions
 *.so
+*.dll
 
 # Distribution / packaging
 .Python

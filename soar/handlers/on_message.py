@@ -1,6 +1,6 @@
 import logging
 
-from soar.linebot.on_message_event import OnMessageEvent
+from soar.linebot.event_wrapper.on_message_event import OnMessageEvent
 
 __ON_MESSAGE_HANDLERS = {}
 

@@ -2,6 +2,7 @@ import importlib
 import logging
 import os
 
+from soar.config import DISABLED_PLUGINS
 from soar.handlers.flex_message import register_flex_message
 
 logger = logging.getLogger(__name__)
@@ -23,6 +24,9 @@ def find_flex_message(plugin_folder: str):
 
 def load_plugins():
     for plugin in _list_plugins():
+        if plugin in DISABLED_PLUGINS:
+            logger.info("Skipping plugin {} because it is disabled in config".format(plugin))
+            continue
         logger.info(f"Loading plugin {plugin}")
         importlib.import_module(f"soar.plugins.{plugin}.main")
 
