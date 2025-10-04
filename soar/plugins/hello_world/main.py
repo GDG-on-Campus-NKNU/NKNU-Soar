@@ -1,6 +1,8 @@
 from soar.handlers.flex_message import build_flex_message
+from soar.handlers.on_follow import on_follow
 from soar.handlers.on_message import on_message
 from soar.handlers.on_post_back import on_post_back
+from soar.linebot.event_wrapper.on_follow_event import OnFollowEvent
 from soar.linebot.event_wrapper.on_message_event import OnMessageEvent
 from soar.linebot.event_wrapper.on_post_back_event import OnPostBackEvent
 from soar.linebot.quick_reply import QuickReplyWrapper
@@ -54,3 +56,10 @@ def post_back(message_event: OnMessageEvent):
 def post_back_test(message_event: OnPostBackEvent):
     message_event.add_text_message(str(message_event.get_data_content()))
     message_event.submit_reply()
+
+
+@on_follow(handler_name="hello_world")
+def on_follow(event: OnFollowEvent):
+    event.add_text_message(f"{event.get_follower_id()} has followed")
+    event.add_text_message(f"Is unblock: {event.is_unblock()}")
+    event.submit_reply()
