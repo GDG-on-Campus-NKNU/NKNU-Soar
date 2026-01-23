@@ -1,136 +1,124 @@
-import os
+import os.path
 import re
+from typing import List, Tuple
+from pathlib import Path
 
 import requests
 
 
-def extract_exported_signatures(text: str):
-    pattern = re.compile(
-        r'extern\s+__declspec\s*\(\s*dllexport\s*\)\s*([^;]+;)',
-        re.IGNORECASE | re.DOTALL
-    )
-    return [m.strip() for m in pattern.findall(text)]
+def parse_cgo_exported_functions(header_content: str) -> List[Tuple[str, Tuple[str, ...], str]]:
+    content = re.sub(r'/\*.*?\*/', '', header_content, flags=re.DOTALL)
+    content = re.sub(r'//.*', '', content)
+
+    pattern = r'extern\s+__declspec\(dllexport\)\s+([\w\s*]+?)\s+(\w+)\s*\((.*?)\)\s*;'
+
+    results = []
+
+    for match in re.finditer(pattern, content, re.DOTALL):
+        return_types = match.group(1).strip()
+        func_name = match.group(2).strip()
+        params_str = match.group(3).strip()
+
+        param_types = []
+        if params_str and params_str != 'void':
+            param_decls = [p.strip() for p in params_str.split(',') if p.strip()]
+
+            for decl in param_decls:
+                parts = decl.split()
+                if not parts:
+                    continue
+
+                type_parts = parts[:-1]
+                param_type = ' '.join(type_parts).strip()
+
+                if '*' in parts[-1] and not type_parts:
+                    param_type = parts[-1].rstrip('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_')
+
+                param_types.append(param_type.strip())
+
+        param_tuple = tuple(param_types) if param_types else ()
+
+        results.append((func_name, param_tuple, return_types))
+
+    return results
 
 
-def strip_param_names(signature: str) -> str:
-    sig = signature.strip()
-    if not sig.endswith(';'):
-        sig += ';'
-    p_open = sig.find('(')
-    p_close = sig.rfind(')')
-    if p_open == -1 or p_close == -1:
-        return sig
-    prefix = sig[:p_open].strip()
-    args_str = sig[p_open + 1:p_close].strip()
-    if args_str == '' or args_str.lower() == 'void':
-        return f"{prefix}();"
-    args = []
-    for arg in args_str.split(','):
-        tokens = arg.strip().split()
-        if not tokens:
-            continue
-        if '*' in arg:
-            args.append("char*")
+def to_python_function_name(c_name: str) -> str:
+    if not c_name:
+        return ""
+
+    result = []
+    for i, char in enumerate(c_name):
+        if char.isupper():
+            if i > 0:
+                result.append('_')
+            result.append(char.lower())
         else:
-            args.append(tokens[0])
-    return f"{prefix}({', '.join(args)});"
+            result.append(char)
+
+    return ''.join(result)
 
 
-def parse_func(signature: str):
-    sig = signature.strip().rstrip(';')
-    m = re.match(r'(.+?)\s+(\w+)\s*\((.*)\)', sig)
-    if not m:
-        return None
-    ret_type, name, args = m.groups()
-    args = [a.strip() for a in args.split(',') if a.strip() and a.strip() != 'void']
-    return ret_type.strip(), name.strip(), args
+type_mapping = {
+    "char*": "str",
+    "int": "int",
+}
 
 
-def map_ctype_to_pyhint(ctype: str) -> str:
-    if "char*" in ctype:
-        return "str | bytes"
-    elif "int" in ctype or "long" in ctype:
-        return "int"
-    elif "float" in ctype or "double" in ctype:
-        return "float"
-    else:
-        return "Any"
+def main():
+    req = requests.get(
+        "https://github.com/GDG-on-Campus-NKNU/NKNU-Core/releases/latest/download/windows_x86_64_nknu_core.h")
+    extracted_functions = parse_cgo_exported_functions(req.text)
 
+    binding_content = [
+        """from ctypes import cdll, c_void_p, string_at
+import os
+import json
+from typing import Any
+from base64 import b64decode
+from pathlib import Path
 
-def map_creturn_to_pyhint(ctype: str) -> str:
-    if "char*" in ctype:
-        return "str | None"
-    elif "int" in ctype or "long" in ctype:
-        return "int"
-    elif "float" in ctype or "double" in ctype:
-        return "float"
-    else:
-        return "Any"
+core_path = Path(__file__).resolve().parent
 
+_dll = cdll.LoadLibrary(os.path.join(core_path, "core.dll"))
 
-def download_bindings():
+"""
+    ]
+
+    parsed_funcs = []
+
+    for func_name, param_tuple, return_type in extracted_functions:
+        python_func = f"""
+def {to_python_function_name(func_name)}({", ".join([f"arg{i}: {type_mapping[param_tuple[i]]}" for i in range(len(param_tuple))])}) -> Any:
+    {"result_ptr = " if return_type != "void" else ""}_dll.{func_name}({", ".join([f"arg{i}" for i in range(len(param_tuple))])})"""
+        if return_type != "void":
+            python_func += f"""
+    result_str = b64decode(string_at(result_ptr).decode("utf-8")).decode("utf-8")
+    free(result_ptr)
+    return result_str"""
+
+        parsed_funcs.append(python_func)
+
+        if len(param_tuple) > 0:
+            binding_content.append(
+                f"_dll.Free.argtypes = [{', '.join(["c_void_p" for _ in param_tuple])}]\n"
+            )
+        if len(return_type) > 0 and return_type != "void":
+            binding_content.append(
+                f"_dll.{func_name}.restype = c_void_p\n"
+            )
+
+    base_path = os.path.join(Path(__file__).resolve().parent, "nknu_core")
+
+    with open(os.path.join(base_path, "bindings.py"), "w+") as f:
+        f.write("".join([*binding_content, *parsed_funcs]))
+
     req = requests.get(
         "https://github.com/GDG-on-Campus-NKNU/NKNU-Core/releases/latest/download/windows_x86_64_nknu_core.dll")
-    current_path = os.path.dirname(os.path.abspath(__file__))
-    core_folder = os.path.join(current_path, "nknu_core")
-    dll_path = os.path.join(core_folder, "core.dll")
-    with open(dll_path, "wb") as f:
+
+    with open(os.path.join(base_path, "core.dll"), "wb") as f:
         f.write(req.content)
 
 
-def generate_bindings():
-    req = requests.get(
-        "https://github.com/GDG-on-Campus-NKNU/NKNU-Core/releases/latest/download/windows_x86_64_nknu_core.h")
-
-    current_path = os.path.dirname(os.path.abspath(__file__))
-    core_folder = os.path.join(current_path, "nknu_core")
-    dll_path = os.path.join(core_folder, "core.dll")
-
-    sigs = extract_exported_signatures(req.text)
-    clean_sigs = [strip_param_names(s) for s in sigs]
-    parsed = [parse_func(s) for s in clean_sigs if parse_func(s)]
-
-    with open(os.path.join(core_folder, "bindings.py"), "w", encoding="utf-8") as f:
-        f.write("from cffi import FFI\n")
-        f.write("from typing import Any\n\n")
-        f.write("ffi = FFI()\n")
-        f.write('ffi.cdef("""\n')
-        for s in clean_sigs:
-            f.write(f"    {s}\n")
-        f.write('""")\n\n')
-        f.write(f'C = ffi.dlopen("{dll_path.replace("\\", "\\\\")}")\n\n')
-        f.write("def _decode(ptr) -> str | None:\n")
-        f.write("    if ptr == ffi.NULL:\n")
-        f.write("        return None\n")
-        f.write("    return ffi.string(ptr).decode('utf-8')\n\n")
-
-        for ret_type, fname, args in parsed:
-            py_args = [f"arg{i}" for i in range(len(args))]
-            py_sig = []
-            for i, a in enumerate(args):
-                hint = map_ctype_to_pyhint(a)
-                py_sig.append(f"{py_args[i]}: {hint}")
-            sig_str = ", ".join(py_sig)
-            ret_hint = map_creturn_to_pyhint(ret_type)
-
-            f.write(f"def {fname}({sig_str}) -> {ret_hint}:\n" if sig_str else f"def {fname}() -> {ret_hint}:\n")
-
-            call_args = []
-            for i, a in enumerate(args):
-                if "char*" in a:
-                    call_args.append(f"{py_args[i]}.encode() if isinstance({py_args[i]}, str) else {py_args[i]}")
-                else:
-                    call_args.append(py_args[i])
-            call_args_str = ", ".join(call_args)
-
-            if ret_type == "char*":
-                f.write(f"    return _decode(C.{fname}({call_args_str}))\n\n")
-            else:
-                f.write(f"    return C.{fname}({call_args_str})\n\n")
-
-    print(f"[OK] Bindings generated")
-
-
-if __name__ == "__main__":
-    download_bindings()
-    generate_bindings()
+if __name__ == '__main__':
+    main()
