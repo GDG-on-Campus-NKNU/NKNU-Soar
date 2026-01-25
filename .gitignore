@@ -1,6 +1,7 @@
 ### PythonVanilla template
 # Generated bindings
 nknu_core/bindings.py
+nknu_core/core.dll
 
 # config
 soar/config.py

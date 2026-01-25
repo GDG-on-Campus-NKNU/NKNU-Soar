@@ -1,7 +1,7 @@
 import os.path
 import re
-from typing import List, Tuple
 from pathlib import Path
+from typing import List, Tuple
 
 import requests
 
@@ -66,9 +66,11 @@ type_mapping = {
 
 
 def main():
+    print("Downloading nknu core header file...")
     req = requests.get(
         "https://github.com/GDG-on-Campus-NKNU/NKNU-Core/releases/latest/download/windows_x86_64_nknu_core.h")
     extracted_functions = parse_cgo_exported_functions(req.text)
+    print("Download finished. Generating nknu core binding file...")
 
     binding_content = [
         """from ctypes import cdll, c_void_p, string_at
@@ -113,11 +115,13 @@ def {to_python_function_name(func_name)}({", ".join([f"arg{i}: {type_mapping[par
     with open(os.path.join(base_path, "bindings.py"), "w+") as f:
         f.write("".join([*binding_content, *parsed_funcs]))
 
+    print("Downloading nknu core file...")
     req = requests.get(
         "https://github.com/GDG-on-Campus-NKNU/NKNU-Core/releases/latest/download/windows_x86_64_nknu_core.dll")
 
     with open(os.path.join(base_path, "core.dll"), "wb") as f:
         f.write(req.content)
+    print("Download finished.")
 
 
 if __name__ == '__main__':
