@@ -5,7 +5,7 @@ from linebot.v3.messaging.models import QuickReply, MessageAction, QuickReplyIte
 from pydantic import StrictStr
 
 
-class QuickReplyWrapper:
+class QuickReplyBuilder:
     def __init__(self):
         self.__items = []
 

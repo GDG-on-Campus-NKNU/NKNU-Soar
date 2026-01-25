@@ -2,6 +2,9 @@
 # Generated bindings
 nknu_core/bindings.py
 
+# config
+soar/config.py
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

@@ -1,11 +1,11 @@
 import importlib
-import logging
 import os
 
 from soar.config import DISABLED_PLUGINS
-from soar.handlers.flex_message import register_flex_message
+from soar.core.plugin_flex_message_manager import flex_message_manager
+from soar.utils.logger import get_logger
 
-logger = logging.getLogger(__name__)
+logger = get_logger(__name__)
 
 
 def _list_plugins():
@@ -14,12 +14,12 @@ def _list_plugins():
             yield item
 
 
-def find_flex_message(plugin_folder: str):
+def _find_flex_message(plugin_folder: str):
     for item in os.listdir(os.path.join(os.path.dirname(__file__), plugin_folder)):
         if item.startswith("flex_") and item.endswith(".json"):
             logger.info("Found flex message {} in plugin {}".format(item, plugin_folder))
             with open(os.path.join(os.path.dirname(__file__), plugin_folder, item), "r") as f:
-                register_flex_message(item.split("_")[1][:-5], f.read())
+                flex_message_manager.add_flex_message(item.split("_")[1][:-5], f.read())
 
 
 def load_plugins():
@@ -28,6 +28,8 @@ def load_plugins():
             logger.info("Skipping plugin {} because it is disabled in config".format(plugin))
             continue
         logger.info(f"Loading plugin {plugin}")
-        importlib.import_module(f"soar.plugins.{plugin}.main")
-
-        find_flex_message(plugin)
+        if os.path.isfile(os.path.join(os.path.dirname(__file__), plugin, "main.py")):
+            importlib.import_module(f"soar.plugins.{plugin}.main")
+            _find_flex_message(plugin)
+        else:
+            logger.warning(f"Skipping plugin {plugin} because main.py doesn't exist")

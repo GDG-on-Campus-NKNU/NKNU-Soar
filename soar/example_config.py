@@ -1,8 +1,13 @@
 import os
 
 DISABLED_PLUGINS = [
-    "hello_world"
+    "hello_word"
 ]
+
+LOG_LEVEL: str = "INFO"
+LOG_TO_FILE: bool = False
+LOG_TO_CONSOLE: bool = True
+LOG_JSON_FORMAT: bool = False
 
 
 def get_channel_access_token():

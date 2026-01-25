@@ -1,12 +1,14 @@
 from linebot.v3.messaging import MessagingApi, ReplyMessageRequest, TextMessage, QuickReply, FlexMessage, FlexContainer
+from linebot.v3.webhooks.models.event import Event
 from pydantic import StrictBool, StrictStr
 
 
 class BaseEvent:
-    def __init__(self, reply_token: str, line_bot_api: MessagingApi):
+    def __init__(self, reply_token: str, line_bot_api: MessagingApi, original_event: Event):
         self.__reply_token = reply_token
         self.__line_bot_api = line_bot_api
         self.__messages = []
+        self.original_event = original_event
 
     def __can_add_more_reply(self) -> bool:
         return len(self.__messages) < 5
