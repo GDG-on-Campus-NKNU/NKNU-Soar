@@ -18,8 +18,8 @@ def _find_flex_message(plugin_folder: str):
     for item in os.listdir(os.path.join(os.path.dirname(__file__), plugin_folder)):
         if item.startswith("flex_") and item.endswith(".json"):
             logger.info("Found flex message {} in plugin {}".format(item, plugin_folder))
-            with open(os.path.join(os.path.dirname(__file__), plugin_folder, item), "r") as f:
-                flex_message_manager.add_flex_message(item.split("_")[1][:-5], f.read())
+            with open(os.path.join(os.path.dirname(__file__), plugin_folder, item), "r", encoding="utf-8") as f:
+                flex_message_manager.add_flex_message("_".join(item.split("_")[1:])[:-5], f.read())
 
 
 def load_plugins():
