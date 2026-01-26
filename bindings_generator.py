@@ -97,7 +97,10 @@ def {to_python_function_name(func_name)}({", ".join([f"arg{i}: {type_mapping[par
             python_func += f"""
     result_str = b64decode(string_at(result_ptr).decode("utf-8")).decode("utf-8")
     free(result_ptr)
-    return result_str"""
+    json_result = json.loads(result_str)
+    if json_result["err"] != "":
+        raise Exception(json_result["err"])
+    return json_result["data"]"""
 
         parsed_funcs.append(python_func)
 
