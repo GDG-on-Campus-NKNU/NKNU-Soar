@@ -2,7 +2,7 @@ from nknu_core.bindings import refresh_school_bus_data, get_hp_to_yc_bus_by_inde
     get_yc_to_hp_bus_by_index, get_yc_to_hp_next_bus_now
 from soar.core.plugin_event_manager import on_message
 from soar.models.event_wrapper.on_message_event import OnMessageEvent
-from soar.plugins.school_bus.get_next_bus import get_next_bus_flex_msg_content, get_next_bus
+from soar.plugins.school_bus.funcs.get_next_bus import get_next_bus_flex_msg_content, get_next_bus
 
 refresh_school_bus_data()
 
