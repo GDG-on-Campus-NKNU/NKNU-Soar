@@ -46,7 +46,7 @@ def flex_example(message_event: OnMessageEvent):
         }
     )
 
-    message_event.add_flex_message(flex_msg.build(), "flex_example")
+    message_event.add_flex_message(flex_msg.build_string(), "flex_example")
     message_event.submit_reply()
 
 
