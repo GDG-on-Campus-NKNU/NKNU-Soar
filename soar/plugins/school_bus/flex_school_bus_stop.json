@@ -1,0 +1,76 @@
+{
+  "type": "box",
+  "layout": "horizontal",
+  "contents": [
+    {
+      "type": "box",
+      "layout": "horizontal",
+      "contents": [
+        {
+          "type": "text",
+          "text": "HOUR",
+          "size": "sm",
+          "gravity": "center",
+          "align": "center",
+          "flex": 3,
+          "weight": "bold"
+        },
+        {
+          "type": "text",
+          "text": ":",
+          "size": "sm",
+          "gravity": "center",
+          "align": "center",
+          "flex": 1,
+          "offsetEnd": "none",
+          "offsetBottom": "1px",
+          "weight": "bold"
+        },
+        {
+          "type": "text",
+          "text": "MIN",
+          "size": "sm",
+          "gravity": "center",
+          "align": "center",
+          "flex": 3,
+          "weight": "bold"
+        }
+      ],
+      "flex": 2
+    },
+    {
+      "type": "box",
+      "layout": "horizontal",
+      "contents": [
+        {
+          "type": "box",
+          "layout": "baseline",
+          "contents": [
+            {
+              "type": "icon",
+              "url": "https://i.imgur.com/ZfdbFkf.png",
+              "size": "lg",
+              "offsetEnd": "none"
+            }
+          ],
+          "cornerRadius": "none",
+          "borderWidth": "none"
+        }
+      ],
+      "flex": 1,
+      "margin": "sm"
+    },
+    {
+      "type": "text",
+      "text": "STOP_NAME",
+      "gravity": "center",
+      "flex": 5,
+      "size": "sm",
+      "color": "#000000",
+      "margin": "none"
+    }
+  ],
+  "spacing": "none",
+  "cornerRadius": "30px",
+  "margin": "none"
+}

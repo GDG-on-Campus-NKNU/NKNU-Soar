@@ -1,0 +1,152 @@
+{
+  "type": "bubble",
+  "size": "hecto",
+  "header": {
+    "type": "box",
+    "layout": "vertical",
+    "contents": [
+      {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "text",
+            "text": "FROM",
+            "color": "#7E0001",
+            "size": "md",
+            "margin": "xs",
+            "weight": "bold"
+          },
+          {
+            "type": "text",
+            "text": "FROM_PLACEHOLDER",
+            "color": "#745443",
+            "size": "md",
+            "flex": 4,
+            "weight": "bold",
+            "margin": "none",
+            "offsetStart": "md"
+          }
+        ],
+        "margin": "none"
+      },
+      {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "text",
+            "text": "TO",
+            "color": "#7E0001",
+            "size": "md",
+            "margin": "xs",
+            "weight": "bold"
+          },
+          {
+            "type": "text",
+            "text": "TO_PLACEHOLDER",
+            "color": "#745443",
+            "size": "md",
+            "flex": 4,
+            "weight": "bold",
+            "margin": "none",
+            "offsetStart": "md"
+          }
+        ],
+        "margin": "sm",
+        "spacing": "none"
+      },
+      {
+        "type": "box",
+        "layout": "vertical",
+        "contents": [
+          {
+            "type": "text",
+            "text": "TIME",
+            "position": "relative",
+            "weight": "bold",
+            "size": "12px",
+            "color": "#000000"
+          }
+        ],
+        "position": "absolute",
+        "offsetStart": "185px",
+        "borderColor": "#7E0001",
+        "borderWidth": "3px",
+        "paddingAll": "sm",
+        "offsetTop": "10px"
+      }
+    ],
+    "paddingAll": "none",
+    "backgroundColor": "#fdd1ce",
+    "spacing": "none",
+    "paddingTop": "lg",
+    "margin": "none",
+    "paddingStart": "xl",
+    "paddingBottom": "lg",
+    "paddingEnd": "xl"
+  },
+  "body": {
+    "type": "box",
+    "layout": "vertical",
+    "contents": [
+      {
+        "type": "text",
+        "text": "⚠️ CAUTION_TEXT ‼️",
+        "color": "#ff0000",
+        "size": "xxs",
+        "weight": "bold",
+        "margin": "none",
+        "offsetEnd": "none",
+        "offsetStart": "xs",
+        "align": "start"
+      },
+      {
+        "type": "box",
+        "layout": "horizontal",
+        "contents": [
+          {
+            "type": "text",
+            "text": "🧑🏻‍🏫 教職上車",
+            "color": "#F4A388",
+            "size": "xxs",
+            "margin": "xs",
+            "wrap": true,
+            "align": "center",
+            "weight": "bold"
+          },
+          {
+            "type": "text",
+            "text": "🧑🏻‍🎓 學生上車 ",
+            "color": "#F4A388",
+            "size": "xxs",
+            "margin": "xs",
+            "wrap": true,
+            "align": "center",
+            "weight": "bold"
+          },
+          {
+            "type": "text",
+            "text": "🚫 客滿不停   ",
+            "color": "#F4A388",
+            "size": "xxs",
+            "margin": "xs",
+            "wrap": true,
+            "align": "center",
+            "weight": "bold"
+          }
+        ],
+        "margin": "md"
+      },
+      {
+        "type": "text",
+        "text": "車輛屬別：VEHICLE_TYPE",
+        "color": "#F4A388",
+        "size": "xs",
+        "margin": "md"
+      }
+    ],
+    "spacing": "none",
+    "paddingAll": "lg"
+  }
+}
