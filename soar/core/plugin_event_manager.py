@@ -40,6 +40,7 @@ class KeyedEventManager:
         for key, handlers in self._registered_handlers.items():
             if key == event.get_key():
                 for h in handlers:
+                    # TODO exception handler
                     h.handler(event)
                 break
 
@@ -61,6 +62,7 @@ class BroadcastEventManager():
 
     def invoke_handler(self, event: BaseEvent):
         for handlers in self._registered_handlers:
+            # TODO exception handler
             handlers.handler(event)
 
 
