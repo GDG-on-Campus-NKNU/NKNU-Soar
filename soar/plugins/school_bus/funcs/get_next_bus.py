@@ -37,7 +37,8 @@ def get_next_bus_flex_msg_content(
     container.append(bus_card_flex_msg_generator(
         now_stops,
         from_text,
-        to_text
+        to_text,
+        "NOW"
     ))
 
     if len(next_stops) > 0:
@@ -45,7 +46,8 @@ def get_next_bus_flex_msg_content(
             bus_card_flex_msg_generator(
                 next_stops,
                 from_text,
-                to_text
+                to_text,
+                "NEXT"
             )
         )
 

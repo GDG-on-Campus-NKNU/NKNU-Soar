@@ -6,10 +6,11 @@ from soar.plugins.school_bus.symbol_map import SymbolMap
 
 def bus_card_flex_msg_generator(schedule_data: Any,
                                 from_text: str,
-                                to_text: str) -> FlexMessageBuilder:
+                                to_text: str,
+                                time_text: str) -> FlexMessageBuilder:
     msg = FlexMessageBuilder("school_bus_container")
 
-    msg.replace({"TIME": "NOW",
+    msg.replace({"TIME": time_text,
                  "FROM_PLACEHOLDER": from_text,
                  "TO_PLACEHOLDER": to_text,
                  "CAUTION_TEXT": f"本車次{schedule_data["daysOfWeek"]}行駛",
