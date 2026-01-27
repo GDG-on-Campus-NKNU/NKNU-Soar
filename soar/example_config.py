@@ -4,6 +4,9 @@ DISABLED_PLUGINS = [
     "hello_word"
 ]
 
+DEFAULT_RICH_MENU = "school_bus"
+RECREATE_RICH_MENU = False
+
 LOG_LEVEL: str = "INFO"
 LOG_TO_FILE: bool = False
 LOG_TO_CONSOLE: bool = True

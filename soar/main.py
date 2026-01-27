@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 
 from soar import config
+from soar.modules.rich_menu.loader import load_rich_menu
 from soar.plugins.loader import load_plugins
 from soar.routes import webhook
 from soar.utils.logger import setup_logging
@@ -15,3 +16,4 @@ setup_logging(
 app = FastAPI()
 app.include_router(webhook.router)
 load_plugins()
+load_rich_menu()
