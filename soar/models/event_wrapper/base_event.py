@@ -1,12 +1,13 @@
-from linebot.v3.messaging import MessagingApi, ReplyMessageRequest, TextMessage, QuickReply, FlexMessage, FlexContainer
+from linebot.v3.messaging import ReplyMessageRequest, TextMessage, QuickReply, FlexMessage, FlexContainer
 from linebot.v3.webhooks.models.event import Event
 from pydantic import StrictBool, StrictStr
 
+from soar.core.line_client import line_bot_api
+
 
 class BaseEvent:
-    def __init__(self, reply_token: str, line_bot_api: MessagingApi, original_event: Event):
+    def __init__(self, reply_token: str, original_event: Event):
         self.__reply_token = reply_token
-        self.__line_bot_api = line_bot_api
         self.__messages = []
         self.original_event = original_event
 
@@ -38,7 +39,7 @@ class BaseEvent:
             )
 
     def submit_reply(self, notification_disabled=False):
-        self.__line_bot_api.reply_message(
+        line_bot_api.reply_message(
             reply_message_request=ReplyMessageRequest(
                 replyToken=StrictStr(self.__reply_token),
                 notificationDisabled=StrictBool(notification_disabled),

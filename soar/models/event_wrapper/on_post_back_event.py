@@ -2,7 +2,6 @@ import json
 from dataclasses import dataclass
 from datetime import datetime
 
-from linebot.v3.messaging import MessagingApi
 from linebot.v3.webhooks.models.postback_event import PostbackEvent
 
 from soar.models.event_wrapper.keyed_event import KeyedEvent
@@ -17,12 +16,12 @@ class DatetimePickerActionResult:
 
 
 class OnPostBackEvent(KeyedEvent):
-    def __init__(self, original_event: PostbackEvent, line_bot_api: MessagingApi):
+    def __init__(self, original_event: PostbackEvent):
         self._json_param = original_event.postback.params
         self._json_data = json.loads(original_event.postback.data)
         key = self._json_data.get("handler_key")
 
-        super().__init__(original_event.reply_token, line_bot_api, original_event, key)
+        super().__init__(original_event.reply_token, original_event, key)
 
     def get_handler_key(self) -> str | None:
         return self._json_data.get("handler_key")
