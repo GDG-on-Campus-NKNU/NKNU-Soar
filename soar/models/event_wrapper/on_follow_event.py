@@ -8,8 +8,8 @@ class OnFollowEvent(BaseEvent):
         super().__init__(original_event.reply_token, original_event)
 
     def is_unblock(self) -> bool:
-        return bool(super().original_event.follow.is_unblocked)
+        return bool(self.original_event.follow.is_unblocked)
 
     def get_follower_id(self) -> int:
-        source = super().original_event.source
+        source = self.original_event.source
         return source.user_id if source else None
