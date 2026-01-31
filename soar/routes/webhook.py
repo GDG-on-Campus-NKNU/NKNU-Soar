@@ -10,6 +10,7 @@ from soar.core.plugin_event_manager import on_message, on_postback, on_follow
 from soar.models.event_wrapper.on_follow_event import OnFollowEvent
 from soar.models.event_wrapper.on_message_event import OnMessageEvent
 from soar.models.event_wrapper.on_post_back_event import OnPostBackEvent
+from soar.modules.database.get_db import _get_db_handler
 from soar.utils.logger import get_logger
 
 router = APIRouter()
@@ -22,7 +23,8 @@ async def callback(request: Request):
 
     body = (await request.body()).decode("utf-8")
     try:
-        handler.handle(body, signature)
+        with _get_db_handler():
+            handler.handle(body, signature)
     except InvalidSignatureError:
         logger.info("Invalid signature. Please check your channel access token/channel secret.")
         raise HTTPException(status_code=400, detail="Invalid signature")
