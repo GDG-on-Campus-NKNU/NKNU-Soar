@@ -8,6 +8,7 @@ from soar.models.event_wrapper.on_message_event import OnMessageEvent
 from soar.models.event_wrapper.on_post_back_event import OnPostBackEvent
 from soar.models.flex_message_builder import CarouselFlexMessageBuilder
 from soar.models.quick_reply_builder import QuickReplyBuilder
+from soar.modules.analytics.analytics import analytic
 from soar.plugins.school_bus.funcs.get_next_bus import get_next_bus_flex_msg_content, get_next_bus
 from soar.plugins.school_bus.utils.bus_card import bus_card_flex_msg_generator
 from soar.utils.action_object_wrapper import create_postback_action
@@ -46,6 +47,7 @@ __directional_utils_map = {
 
 
 @on_message.add_handler(key="下一班校車")
+@analytic("下一班校車")
 def next_bus(event: OnMessageEvent):
     user_msg = event.get_split_user_message()
     if len(user_msg) != 2:
@@ -86,6 +88,7 @@ def next_bus(event: OnMessageEvent):
 
 
 @on_postback.add_handler("乘車規劃")
+@analytic("乘車規劃")
 def bus_schedule(event: OnPostBackEvent):
     direction = event.get_data_content().get("direction")
 
