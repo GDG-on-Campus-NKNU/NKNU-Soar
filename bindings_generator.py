@@ -1,16 +1,27 @@
 import os.path
+import platform
 import re
 from pathlib import Path
 from typing import List, Tuple
 
 import requests
 
+current_os = platform.system()
+
 
 def parse_cgo_exported_functions(header_content: str) -> List[Tuple[str, Tuple[str, ...], str]]:
-    content = re.sub(r'/\*.*?\*/', '', header_content, flags=re.DOTALL)
-    content = re.sub(r'//.*', '', content)
+    if current_os == "Linux":
+        content = re.sub(r'/\*.*?\*/', '', header_content, flags=re.DOTALL)
+        content = re.sub(r'//.*', '', content)
 
-    pattern = r'extern\s+__declspec\(dllexport\)\s+([\w\s*]+?)\s+(\w+)\s*\((.*?)\)\s*;'
+        pattern = r'extern\s+([\w\s*]+?)\s+(\w+)\s*\(\s*([^)]*)\s*\)\s*;'
+    elif current_os == "Windows":
+        content = re.sub(r'/\*.*?\*/', '', header_content, flags=re.DOTALL)
+        content = re.sub(r'//.*', '', content)
+
+        pattern = r'extern\s+__declspec\(dllexport\)\s+([\w\s*]+?)\s+(\w+)\s*\((.*?)\)\s*;'
+    else:
+        raise Exception(f"Unsupported OS: {current_os}")
 
     results = []
 
@@ -66,10 +77,23 @@ type_mapping = {
 
 
 def main():
+    print("Current OS: ", current_os)
+
+    links = {
+        "Windows": [
+            "https://github.com/GDG-on-Campus-NKNU/NKNU-Core/releases/latest/download/windows_x86_64_nknu_core.h",
+            "https://github.com/GDG-on-Campus-NKNU/NKNU-Core/releases/latest/download/windows_x86_64_nknu_core.dll"
+        ],
+        "Linux": [
+            "https://github.com/GDG-on-Campus-NKNU/NKNU-Core/releases/latest/download/linux_x86_64_nknu_core.h",
+            "https://github.com/GDG-on-Campus-NKNU/NKNU-Core/releases/latest/download/linux_x86_64_nknu_core.so"
+        ]
+    }
+
     print("Downloading nknu core header file...")
-    req = requests.get(
-        "https://github.com/GDG-on-Campus-NKNU/NKNU-Core/releases/latest/download/windows_x86_64_nknu_core.h")
+    req = requests.get(links[current_os][0])
     extracted_functions = parse_cgo_exported_functions(req.text)
+
     print("Download finished. Generating nknu core binding file...")
 
     binding_content = [
@@ -82,7 +106,7 @@ from pathlib import Path
 
 core_path = Path(__file__).resolve().parent
 
-_dll = cdll.LoadLibrary(os.path.join(core_path, "core.dll"))
+_dll = cdll.LoadLibrary(os.path.join(core_path, "core.lib"))
 
 """
     ]
@@ -119,10 +143,9 @@ def {to_python_function_name(func_name)}({", ".join([f"arg{i}: {type_mapping[par
         f.write("".join([*binding_content, *parsed_funcs]))
 
     print("Downloading nknu core file...")
-    req = requests.get(
-        "https://github.com/GDG-on-Campus-NKNU/NKNU-Core/releases/latest/download/windows_x86_64_nknu_core.dll")
+    req = requests.get(links[current_os][1])
 
-    with open(os.path.join(base_path, "core.dll"), "wb") as f:
+    with open(os.path.join(base_path, "core.lib"), "wb") as f:
         f.write(req.content)
     print("Download finished.")
 
