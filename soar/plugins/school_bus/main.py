@@ -11,7 +11,7 @@ from soar.models.quick_reply_builder import QuickReplyBuilder
 from soar.modules.analytics.analytics import analytic
 from soar.plugins.school_bus.funcs.get_next_bus import get_next_bus_flex_msg_content, get_next_bus
 from soar.plugins.school_bus.utils.bus_card import bus_card_flex_msg_generator
-from soar.utils.action_object_wrapper import create_postback_action
+from soar.utils.action_object_wrapper import create_postback_action, create_datetime_picker_action
 
 refresh_school_bus_data()
 
@@ -174,7 +174,9 @@ def bus_schedule(event: OnPostBackEvent):
                                        "direction": direction},
                                    "上一頁")
         )
-    if first_sche_index < __directional_utils_map[direction]["total_sche_count"] - 1:
+
+    total = __directional_utils_map[direction]["total_sche_count"]
+    if first_sche_index + (1 if second_sche else 0) < total - 1:
         next_index = list(range(first_sche_index + 2,
                                 min(first_sche_index + 4, __directional_utils_map[direction]["total_sche_count"])))
 
@@ -193,3 +195,22 @@ def bus_schedule(event: OnPostBackEvent):
                            )
 
     event.submit_reply()
+
+# because the rich menu is not available on the desktop Line client
+# uncomment this code to test the bus schedule postback handler
+# @on_message.add_handler("test乘車規劃")
+# def test_bus_schedule(event: OnMessageEvent):
+#     if len(event.get_split_user_message()) < 2:
+#         return
+#
+#     quick_reply = QuickReplyBuilder()
+#     quick_reply.add_option(
+#         create_datetime_picker_action(
+#             "乘車規劃",
+#             {"direction": event.get_split_user_message()[1]},
+#             "datetime_picker",
+#             "datetime"
+#         )
+#     )
+#     event.add_text_message("test乘車規劃", quick_reply.build())
+#     event.submit_reply()
