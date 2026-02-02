@@ -32,8 +32,8 @@ def _find_flex_message(plugin_name: str, plugin_path: Path):
 
 def load_plugins():
     for plugin in _list_plugins():
-        if plugin in DISABLED_PLUGINS:
-            logger.info("Skipping plugin {} because it is disabled in config".format(plugin))
+        if plugin.name in DISABLED_PLUGINS:
+            logger.info("Skipping plugin {} because it is disabled in config".format(plugin.name))
             continue
         logger.info(f"Loading plugin {plugin.name}")
         if plugin.joinpath("main.py").is_file():
