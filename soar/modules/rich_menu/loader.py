@@ -39,7 +39,11 @@ def load_rich_menu():
 
         menu_id = line_bot_api.create_rich_menu(create_rich_menu_req).rich_menu_id
         logger.debug(f"Created rich menu. ID: {menu_id}")
-        with open(__menu_folder.joinpath(f"{menu_name}.jpg"), "rb") as f:
+
+        rich_menu_image_path = __menu_folder.joinpath(f"{menu_name}.jpg") if __menu_folder.joinpath(
+            f"{menu_name}.jpg").exists() else __menu_folder.joinpath(f"{menu_name}.png")
+
+        with open(rich_menu_image_path, "rb") as f:
             line_bot_api_blob.set_rich_menu_image(rich_menu_id=menu_id,
                                                   body=bytearray(f.read()),
                                                   _headers={'Content-Type': 'image/jpeg'})

@@ -45,12 +45,6 @@ def main():
                 bounds=RichMenuBounds(
                     x=2 * option_width, y=0, width=option_width, height=option_height
                 ),
-                action=create_message_action("", "問題回報")
-            ),
-            RichMenuArea(
-                bounds=RichMenuBounds(
-                    x=2 * option_width, y=option_height, width=option_width, height=option_height
-                ),
                 action=create_message_action("", "我要加入")
             ),
         ]
