@@ -8,6 +8,5 @@ def on_follow(event: OnFollowEvent):
 """啾！我是高師校園小飛燕 🐦
 由 GDG on Campus NKNU 社團所開發的 LINE Bot
 
-點選下方選單看看現在我可以幫到你什麼～    
-""")
+點選下方選單看看現在我可以幫到你什麼～""")
     event.submit_reply()
