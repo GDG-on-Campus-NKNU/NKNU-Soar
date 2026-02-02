@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 
 DISABLED_PLUGINS = [
-    "hello_word"
+    "hello_world"
 ]
 
 DEFAULT_RICH_MENU = "school_bus"
