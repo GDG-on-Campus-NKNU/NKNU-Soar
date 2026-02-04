@@ -1,7 +1,9 @@
 import importlib
+import uuid
 from pathlib import Path
 
-from linebot.v3.messaging import RichMenuResponse
+from linebot.v3.messaging import RichMenuResponse, RichMenuBatchRequest, RichMenuBatchOperation
+from pydantic import StrictStr
 
 from soar.config import DEFAULT_RICH_MENU, RECREATE_RICH_MENU
 from soar.core.line_client import line_bot_api, line_bot_api_blob
@@ -51,6 +53,17 @@ def load_rich_menu():
         rich_menu_manager.add_rich_menu(menu_name, menu_id)
 
     line_bot_api.set_default_rich_menu(rich_menu_manager.get_rich_menu_id(DEFAULT_RICH_MENU))
+
+    if RECREATE_RICH_MENU:
+        # reset all user's rich menu to default
+        rid = uuid.uuid4().hex
+        line_bot_api.rich_menu_batch(RichMenuBatchRequest(
+            operations=[RichMenuBatchOperation(
+                type=StrictStr("unlinkAll")
+            )],
+            resumeRequestKey=rid,
+        ))
+        logger.warning("Sending request for unlink all rich menu. Request ID: {}".format(rid))
 
 
 def __get_created_rich_menu() -> dict[str, RichMenuResponse]:
