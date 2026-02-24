@@ -68,6 +68,11 @@ def to_python_function_name(c_name: str) -> str:
 
     return ''.join(result)
 
+def get_local_lib_file(base_path: Path) -> Path:
+    for f in base_path.iterdir():
+        if f.is_file() and (f.name.endswith(".so") or f.name.endswith(".dll")):
+            return f
+    return None
 
 type_mapping = {
     "char*": "str",
@@ -76,8 +81,6 @@ type_mapping = {
 
 
 def main():
-    print("Current OS: ", current_os)
-
     links = {
         "Windows": [
             "https://github.com/GDG-on-Campus-NKNU/NKNU-Core/releases/latest/download/windows_x86_64_nknu_core.h",
@@ -89,11 +92,26 @@ def main():
         ]
     }
 
-    print("Downloading nknu core header file...")
-    req = requests.get(links[current_os][0])
-    extracted_functions = parse_cgo_exported_functions(req.text)
+    print("Current OS: ", current_os)
 
-    print("Download finished. Generating nknu core binding file...")
+    if links.get(current_os) is None:
+        raise Exception(f"Unsupported OS: {current_os}")
+
+    base_path = Path(__file__).resolve().parent.joinpath("nknu_core")
+    
+    local_header_file = list(base_path.glob("*.h"))
+    header_file_content = ""
+    if len(local_header_file) == 0:
+        print("Downloading nknu core header file...")
+        req = requests.get(links[current_os][0])
+        header_file_content = req.text
+    else:
+        print("Found local header file...")
+        with open(local_header_file[0], "r") as f:
+            header_file_content = f.read()
+    extracted_functions = parse_cgo_exported_functions(header_file_content)
+
+    print("Generating nknu core binding file...")
 
     binding_content = [
         """from ctypes import cdll, c_void_p, string_at
@@ -128,24 +146,27 @@ def {to_python_function_name(func_name)}({", ".join([f"arg{i}: {type_mapping[par
 
         if len(param_tuple) > 0:
             binding_content.append(
-                f"_dll.Free.argtypes = [{', '.join(["c_void_p" for _ in param_tuple])}]\n"
+                f"_dll.{func_name}.argtypes = [{', '.join(["c_void_p" for _ in param_tuple])}]\n"
             )
         if len(return_type) > 0 and return_type != "void":
             binding_content.append(
                 f"_dll.{func_name}.restype = c_void_p\n"
             )
 
-    base_path = Path(__file__).resolve().parent.joinpath("nknu_core")
-
     with open(base_path.joinpath("bindings.py"), "w+") as f:
         f.write("".join([*binding_content, *parsed_funcs]))
 
-    print("Downloading nknu core file...")
-    req = requests.get(links[current_os][1])
+    local_lib_file = get_local_lib_file(base_path)
+    if local_lib_file is not None:
+        print("Found local lib file...")
+        local_lib_file.rename(base_path.joinpath("core.lib"))
+    else:
+        print("Downloading nknu core file...")
+        req = requests.get(links[current_os][1])
 
-    with open(base_path.joinpath("core.lib"), "wb") as f:
-        f.write(req.content)
-    print("Download finished.")
+        with open(base_path.joinpath("core.lib"), "wb") as f:
+            f.write(req.content)
+        print("Download finished.")
 
 
 if __name__ == '__main__':

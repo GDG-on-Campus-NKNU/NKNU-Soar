@@ -3,6 +3,11 @@
 nknu_core/bindings.py
 nknu_core/core.lib
 
+# libs
+nknu_core/*.so
+nknu_core/*.dll
+nknu_core/*.h
+
 # config
 soar/config.py
 
