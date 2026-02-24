@@ -1,4 +1,3 @@
-import os.path
 import platform
 import re
 from pathlib import Path
@@ -98,7 +97,6 @@ def main():
 
     binding_content = [
         """from ctypes import cdll, c_void_p, string_at
-import os
 import json
 from typing import Any
 from base64 import b64decode
@@ -106,7 +104,7 @@ from pathlib import Path
 
 core_path = Path(__file__).resolve().parent
 
-_dll = cdll.LoadLibrary(os.path.join(core_path, "core.lib"))
+_dll = cdll.LoadLibrary(str(core_path.joinpath("core.lib").resolve()))
 
 """
     ]
@@ -137,15 +135,15 @@ def {to_python_function_name(func_name)}({", ".join([f"arg{i}: {type_mapping[par
                 f"_dll.{func_name}.restype = c_void_p\n"
             )
 
-    base_path = os.path.join(Path(__file__).resolve().parent, "nknu_core")
+    base_path = Path(__file__).resolve().parent.joinpath("nknu_core")
 
-    with open(os.path.join(base_path, "bindings.py"), "w+") as f:
+    with open(base_path.joinpath("bindings.py"), "w+") as f:
         f.write("".join([*binding_content, *parsed_funcs]))
 
     print("Downloading nknu core file...")
     req = requests.get(links[current_os][1])
 
-    with open(os.path.join(base_path, "core.lib"), "wb") as f:
+    with open(base_path.joinpath("core.lib"), "wb") as f:
         f.write(req.content)
     print("Download finished.")
 
