@@ -1,0 +1,62 @@
+{
+    "type": "box",
+    "layout": "vertical",
+
+    "contents": [
+        {
+            "type": "box",
+            "layout": "horizontal",
+            "alignItems": "center",
+            "contents": [
+                {
+                    "type": "text",
+                    "text": "emoji",
+                    "size": "sm",
+                    "flex": 0
+                },
+                {
+                    "type": "box",
+                    "layout": "vertical",
+                    "flex": 1,
+                    "contents": [
+                        {
+                            "type": "text",
+                            "text": "stop_name",
+                            "weight": "bold",
+                            "size": "sm",
+                            "color": "#333333",
+                            "align": "end"
+                        },
+                        {
+                            "type": "text",
+                            "text": "time",
+                            "size": "xs",
+                            "color": "#888888",
+                            "align": "end"
+                        }
+                    ]
+                },
+                {
+                    "type": "box",
+                    "layout": "vertical",
+                    "width": "20px",
+                    "alignItems": "center",
+                    "margin": "sm",
+                    "contents": [
+                        {
+                            "type": "box",
+                            "layout": "vertical",
+                            "contents": [],
+                            "width": "12px",
+                            "height": "12px",
+                            "cornerRadius": "30px",
+                            "borderColor": "departure_color",
+                            "borderWidth": "2px"
+                        }
+                    ]
+                }
+            ]
+        }
+        
+    ]
+}

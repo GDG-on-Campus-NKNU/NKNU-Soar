@@ -1,152 +1,235 @@
 {
   "type": "bubble",
-  "size": "hecto",
+  "size": "kilo",
   "header": {
     "type": "box",
     "layout": "vertical",
     "contents": [
       {
         "type": "box",
-        "layout": "vertical",
+        "layout": "horizontal",
         "contents": [
           {
             "type": "text",
-            "text": "FROM",
-            "color": "#7E0001",
+            "text": "高師大 🚌",
+            "weight": "bold",
+            "size": "xl",
+            "color": "header_font_color",
+            "align": "start",
+            "flex": 1
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "borderColor": "#ffffff",
+            "borderWidth": "medium",
+            "cornerRadius": "md",
+            "paddingAll": "xs",
+            "justifyContent": "center",
+            "alignItems": "center",
+            "contents": [
+              {
+                "type": "text",
+                "text": "timetag",
+                "size": "xs",
+                "color": "header_font_color",
+                "weight": "bold"
+              }
+            ],
+            "width": "80px"
+          }
+        ]
+      },
+      {
+        "type": "box",
+        "layout": "horizontal",
+        "alignItems": "center",
+        "justifyContent": "center",
+        "margin": "md",
+        "contents": [
+          {
+            "type": "text",
+            "text": "departure_name",
             "size": "md",
-            "margin": "xs",
+            "color": "header_font_color",
+            "align": "end",
+            "flex": 1,
             "weight": "bold"
           },
           {
             "type": "text",
-            "text": "FROM_PLACEHOLDER",
-            "color": "#745443",
-            "size": "md",
-            "flex": 4,
+            "text": "➜",
+            "size": "lg",
+            "color": "arrowhead_color",
             "weight": "bold",
-            "margin": "none",
-            "offsetStart": "md"
-          }
-        ],
-        "margin": "none"
-      },
-      {
-        "type": "box",
-        "layout": "vertical",
-        "contents": [
-          {
-            "type": "text",
-            "text": "TO",
-            "color": "#7E0001",
-            "size": "md",
-            "margin": "xs",
-            "weight": "bold"
+            "margin": "md",
+            "flex": 0
           },
           {
             "type": "text",
-            "text": "TO_PLACEHOLDER",
-            "color": "#745443",
+            "text": "arrival_name",
             "size": "md",
-            "flex": 4,
-            "weight": "bold",
-            "margin": "none",
-            "offsetStart": "md"
+            "color": "header_font_color",
+            "align": "start",
+            "margin": "md",
+            "flex": 1,
+            "weight": "bold"
           }
-        ],
-        "margin": "sm",
-        "spacing": "none"
-      },
-      {
-        "type": "box",
-        "layout": "vertical",
-        "contents": [
-          {
-            "type": "text",
-            "text": "TIME",
-            "position": "relative",
-            "weight": "bold",
-            "size": "12px",
-            "color": "#000000"
-          }
-        ],
-        "position": "absolute",
-        "offsetStart": "185px",
-        "borderColor": "#7E0001",
-        "borderWidth": "3px",
-        "paddingAll": "sm",
-        "offsetTop": "10px"
+        ]
       }
     ],
-    "paddingAll": "none",
-    "backgroundColor": "#fdd1ce",
-    "spacing": "none",
-    "paddingTop": "lg",
-    "margin": "none",
-    "paddingStart": "xl",
-    "paddingBottom": "lg",
-    "paddingEnd": "xl"
+    "backgroundColor": "header_background_color",
+    "paddingAll": "xl"
   },
   "body": {
     "type": "box",
     "layout": "vertical",
     "contents": [
       {
-        "type": "text",
-        "text": "⚠️ CAUTION_TEXT ‼️",
-        "color": "#ff0000",
-        "size": "xxs",
-        "weight": "bold",
-        "margin": "none",
-        "offsetEnd": "none",
-        "offsetStart": "xs",
-        "align": "start"
-      },
-      {
         "type": "box",
         "layout": "horizontal",
+        "spacing": "xl",
         "contents": [
           {
-            "type": "text",
-            "text": "🧑🏻‍🏫 教職上車",
-            "color": "#F4A388",
-            "size": "xxs",
-            "margin": "xs",
-            "wrap": true,
-            "align": "center",
-            "weight": "bold"
+            "type": "box",
+            "layout": "vertical",
+            "flex": 1,
+            "contents": [
+              {
+                "type": "text",
+                "text": "上車",
+                "weight": "bold",
+                "align": "center",
+                "size": "md",
+                "color": "#333333"
+              },
+              {
+                "type": "text",
+                "text": "departure_name",
+                "size": "xs",
+                "align": "center",
+                "color": "departure_color",
+                "margin": "xs"
+              },
+              {
+                "type": "box",
+                "layout": "vertical",
+                "height": "15px",
+                "contents": []
+              }
+            ]
           },
           {
-            "type": "text",
-            "text": "🧑🏻‍🎓 學生上車 ",
-            "color": "#F4A388",
-            "size": "xxs",
-            "margin": "xs",
-            "wrap": true,
-            "align": "center",
-            "weight": "bold"
-          },
-          {
-            "type": "text",
-            "text": "🚫 客滿不停   ",
-            "color": "#F4A388",
-            "size": "xxs",
-            "margin": "xs",
-            "wrap": true,
-            "align": "center",
-            "weight": "bold"
+            "type": "box",
+            "layout": "vertical",
+            "flex": 1,
+            "contents": [
+              {
+                "type": "text",
+                "text": "下車",
+                "weight": "bold",
+                "align": "center",
+                "size": "md",
+                "color": "#333333"
+              },
+              {
+                "type": "text",
+                "text": "arrival_name",
+                "size": "xs",
+                "align": "center",
+                "color": "arrival_color",
+                "margin": "xs"
+              },
+              {
+                "type": "box",
+                "layout": "vertical",
+                "height": "15px",
+                "contents": []
+              }
+            ]
           }
-        ],
-        "margin": "md"
-      },
-      {
-        "type": "text",
-        "text": "車輛屬別：VEHICLE_TYPE",
-        "color": "#F4A388",
-        "size": "xs",
-        "margin": "md"
+        ]
       }
-    ],
-    "spacing": "none",
-    "paddingAll": "lg"
+    ]
+  },
+  "footer": {
+    "type": "box",
+    "layout": "vertical",
+    "contents": [
+      {
+        "type": "box",
+        "layout": "vertical",
+        "backgroundColor": "#f0f4f8",
+        "cornerRadius": "md",
+        "paddingAll": "md",
+        "contents": [
+          {
+            "type": "box",
+            "layout": "horizontal",
+            "alignItems": "center",
+            "contents": [
+              {
+                "type": "text",
+                "text": "🧑🏻‍🏫 教職上車",
+                "size": "xxs",
+                "color": "#333333",
+                "weight": "bold",
+                "flex": 1,
+                "align": "center",
+                "gravity": "center"
+              },
+              {
+                "type": "separator",
+                "color": "#dcdcdc"
+              },
+              {
+                "type": "text",
+                "text": "🧑🏻‍🎓 學生上車",
+                "size": "xxs",
+                "color": "#333333",
+                "weight": "bold",
+                "flex": 1,
+                "align": "center",
+                "gravity": "center"
+              },
+              {
+                "type": "separator",
+                "color": "#dcdcdc"
+              },
+              {
+                "type": "text",
+                "text": "vehical_type",
+                "size": "xxs",
+                "color": "#333333",
+                "weight": "bold",
+                "flex": 1,
+                "align": "center",
+                "gravity": "center"
+              }
+            ]
+          },
+          {
+            "type": "separator",
+            "color": "#dcdcdc",
+            "margin": "sm"
+          },
+          {
+            "type": "box",
+            "layout": "vertical",
+            "margin": "sm",
+            "alignItems": "center",
+            "contents": [
+              {
+                "type": "text",
+                "text": "本車次caution_time行使!!",
+                "size": "xxs",
+                "color": "#333333",
+                "weight": "bold"
+              }
+            ]
+          }
+        ]
+      }
+    ]
   }
 }
