@@ -221,7 +221,7 @@
             "contents": [
               {
                 "type": "text",
-                "text": "本車次caution_time行使駛!",
+                "text": "本車次caution_time行駛!",
                 "size": "xxs",
                 "color": "#333333",
                 "weight": "bold"
