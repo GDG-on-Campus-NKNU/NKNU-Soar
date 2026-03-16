@@ -22,17 +22,17 @@ def bus_card_flex_msg_generator(schedule_data: Any,
     from_campus = _campus_key(from_text)
     to_campus = _campus_key(to_text)
 
-    blue = '#35385A' # '#0367D3'
+    blue = '#0367D3'#'#35385A'  
     #带入json参数
     to_hp_param = {
         "arrival_name": to_text,
         "departure_name": from_text,
         "header_font_color": "#ffffff",
-        "header_background_color": blue,
+        "header_background_color": '#35385A',
         "arrowhead_color" : "#FFD700",
         "timetag": time_text,
-        "departure_color": "#EF454D",
-        "arrival_color": blue,
+        "departure_color": blue,
+        "arrival_color": "#EF454D",
         "vehical_type": schedule_data["vehicleType"][:4],
         "caution_time": schedule_data["daysOfWeek"]
         
@@ -45,8 +45,8 @@ def bus_card_flex_msg_generator(schedule_data: Any,
         "header_background_color": "#fdd1ce",
         "arrowhead_color" : "#3C3C43",
         "timetag": time_text,
-        "departure_color": blue,
-        "arrival_color": "#EF454D",
+        "departure_color": "#EF454D",
+        "arrival_color": blue,
         "vehical_type": schedule_data["vehicleType"][:4],
         "caution_time": schedule_data["daysOfWeek"]
     }
